@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../Style/Style_Table.css"> 
+    <link rel="stylesheet" type="text/css" href="../Style/Style.css">
+    <title>Transaction Table</title>
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker App</h1>
+        <p>Track your Expense here</p> 
+        <nav>
+            <a href="../Expense/User_Expense.html">Home</a>
+            <h1></h1>
+        </nav>   
+    </header>   
+
+    <center><h1><b>Day to Expenses</b></h1></center>
+    
+    <div class="container" id="div1">
+        <form name="sample">
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" id="start_date" required>
+            <br>
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" id="end_date" required>                
+            <p id="date_error" style="color: red;"></p>
+            <br>
+            <button id="getReport" onclick="ShowReport(event)">GET YOUR REPORTS</button>
+        </form>
+        <button id="download" onclick="download(event)" style="display:flex">DOWNLOAD REPORTS</button>
+    </div>
+
+    <div class="custom-list-container">
+        <ol class="custom-list" id="myList"></ol>
+        <div class="pagination">
+            <button id="prevPageButton">Previous Page</button>
+            <button id="nextPageButton">Next Page</button>
+        </div>
+    </div>
+
+    <div id="allReport" style="display: none;" >
+        <main>
+            <div>
+                <center>
+                    <h1>Transaction Table</h1>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Income</th>
+                                    <th>Expense</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report">
+                                <tr>
+                                    <td>2.9.2023</td>
+                                    <td>Groceries</td>
+                                    <td>Food</td>
+                                    <td></td>
+                                    <td>$90.00</td>
+                                </tr>
+                            </tbody>    
+                            <tfoot>
+                                <td colspan="3">Total</td>
+                                <th id="totalIncome">0.00</th>
+                                <th id="totalExpense">0.00</th>
+                            </tfoot>
+                        </table>
+                    </div>
+                </center>
+            </div>
+        </main>
+
+        <main>   
+            <div>
+                <center>
+                    <h1>Yearly Report</h1>
+                    <div>
+                        <table id="yearly_report">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Income</th>
+                                    <th>Expense</th>
+                                    <th>Saving</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody">
+                                <tr>
+                                    <td>sept</td>
+                                    <td>100s</td>
+                                    <td>50</td>
+                                    <td>50</td>
+                                </tr>
+                            </tbody>    
+                            <tfoot>
+                                <td colspan="1">Total</td>
+                                <th id="totalIncome">0.00</th>
+                                <th id="totalExpense">0.00</th>
+                                <th id="totalSaving">0.00</th>
+                            </tfoot>
+                        </table>
+                    </div>
+                </center>
+            </div>
+        </main>
+
+        <main>   
+            <div>
+                <center>
+                    <h1>Notes Report</h1>
+                    <div>
+                        <table id="yearly_report">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>10-11-2023</td>
+                                    <td>Buy house</td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </center>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="Report.js"></script>
+</body>
+</html>

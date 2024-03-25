@@ -1,0 +1,92 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+ }
+ 
+ html, body {
+   width: 100%;
+   height: 100%;
+   margin: 0 auto;
+ }
+ 
+ #div1 {
+   width: 25%;
+   margin-left: 40%;
+ }
+ 
+ table {
+   border-collapse: collapse;
+   width: 100%;
+   margin-top: 10px;
+ }
+ 
+ th, td {
+   border: 1px solid black;
+   padding: 5px;
+ }
+ 
+ th {
+   background-color: #eee;
+   text-align: left;
+ }
+ 
+ td {
+   text-align: right;
+ }
+ 
+ tfoot {
+   font-weight: bold;
+ }
+ 
+ .flex-container {
+   display: flex;
+ }
+ 
+ .custom-list-container {
+   width: 600px;
+   border: 5px solid #ccc;
+   padding: 10px;
+   overflow-y: scroll;
+   max-height: 300px;
+   background-color: #fff;
+   margin-top: 100px;
+   margin-bottom: 30px;
+   margin-left: 20px;
+   margin-right: 10px;
+ }
+ 
+ .custom-list {
+   color: #fff;
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
+ }
+ 
+ .pagination {
+   display: flex;
+   justify-content: space-between;
+   margin-top: 1px;
+   position: sticky;
+   bottom: 0;
+   background-color: #fff;
+ }
+ 
+ #prevPageButton,
+ #nextPageButton,
+ #prevPageButton2,
+ #nextPageButton2 {
+   padding: 5px 10px;
+   background-color: #007bff;
+   color: #fff;
+   border: none;
+   cursor: pointer;
+ }
+ 
+ #prevPageButton:hover,
+ #nextPageButton:hover,
+ #prevPageButton2:hover,
+ #nextPageButton2:hover {
+   background-color: #0056b3;
+ }
+ 
