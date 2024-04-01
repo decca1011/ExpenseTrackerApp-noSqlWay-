@@ -18,7 +18,15 @@ const userSchema = new Schema({
   mobile:{
    type : Number ,
    required: true
-  }
+  },
+  total:{
+    type : Number ,
+    default: 0,
+   },
+   isPremium:{
+    type:Boolean,
+    default:false
+   }
 });
 
 // userSchema.methods.addToCart = function(product) {

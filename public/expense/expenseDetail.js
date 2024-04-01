@@ -1,36 +1,45 @@
-// Define API URLs
-const baseURL = 'http://44.198.130.123:3000';
-const premiumPurchaseURL = `${baseURL}/purchase/premium`;
-const updateTransactionStatusURL = `${baseURL}/purchase/updatetransactionstatus`;
-const getDashboardURL = `${baseURL}/getYour/dashboard/`;
+ // Define API URLs
 
-// Function to handle form submission
-async function submitForm(event) {
-  // Prevent the default form submission behavior
-  event.preventDefault();
 
-  // Retrieve data from the form
-  const amount = parseFloat(document.getElementById("expenseAmount").value) || 0;
-  const income = parseFloat(document.getElementById("incomeAmount").value) || 0;
-  const description = document.getElementById("descript").value;
-  const category = document.getElementById("Category").value;
 
-  // Get the user's ID from local storage
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-    // Handle the case where the token is missing or not authenticated
-    console.error('User is not authenticated.');
-    return;
-  }
-
-  // Include the token in the request headers
-  const authorizationHeader = `MyAuthHeader ${token}`;
-
-  // Create an object with expense data, including the userId
-  const expenseData = { amount, income, description, category };
-
+async function addExpense(event){
   try {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Retrieve data from the form
+    const amountElement = document.getElementById("expenseAmount");
+    const incomeElement = document.getElementById("incomeAmount");
+    const descriptionElement = document.getElementById("description");
+    const categoryElement = document.getElementById("Category");
+
+    // Check if any element is null before accessing its value property
+    if (!amountElement || !incomeElement || !descriptionElement || !categoryElement) {
+      console.error("One or more elements not found.");
+      return;
+    }
+
+    // Retrieve values from the form elements
+    const amount = parseFloat(amountElement.value) || 0;
+    const income = parseFloat(incomeElement.value) || 0;
+    const description = descriptionElement.value;
+    const category = categoryElement.value;
+
+    // Get the user's token from local storage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // Handle the case where the token is missing or not authenticated
+      console.error('User is not authenticated.');
+      return;
+    }
+
+    // Include the token in the request headers
+    const authorizationHeader = `Bearer ${token}`;
+
+    // Create an object with expense data, including the userId
+    const expenseData = { amount, income, description, category };
+console.log(expenseData)
     // Send a POST request to add the expense
     const response = await axios.post(`${baseURL}/post/expense`, expenseData, {
       headers: { Authorization: authorizationHeader }
@@ -38,11 +47,12 @@ async function submitForm(event) {
 
     console.log(response);
     // Reload the page after submitting the form
-    window.location.reload();
+     window.location.reload();
   } catch (error) {
     console.error(error);
   }
 }
+
 
 // Function to update UI based on premium status
 async function updateUI(response, isPremium) {
@@ -113,10 +123,12 @@ async function editExpense(expense, listItemElement) {
       const response = await axios.post(`${baseURL}/user/edit`, updatedExpenseData);
       console.log('Expense updated:', response.data);
 
+      window.location.reload()
+
       // Update the expense in the UI
-      const updatedExpense = response.data;
-      const updatedElement = createListItemElement(updatedExpense);
-      listItemElement.replaceWith(updatedElement);
+      // const updatedExpense = response.data;
+      // const updatedElement = createListItemElement(updatedExpense);
+      // listItemElement.replaceWith(updatedElement);
     } catch (error) {
       console.error('Error updating expense:', error);
     }
@@ -192,7 +204,8 @@ async function fetchExpenseData(page, itemsPerPage) {
   const token = localStorage.getItem('token');
   
   if (token) {
-    const authorizationHeader = `MyAuthHeader ${token}`;
+      // Include the token in the request headers
+      const authorizationHeader = `Bearer ${token}`;
     
     try {
       const response = await axios.get(`${baseURL}/get/expense?page=${page}&perPage=${itemsPerPage}`, {

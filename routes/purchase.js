@@ -9,9 +9,9 @@ const Order = require('../controllers/order');
 
 const authenticated = require('../middleware/authMiddleware')
  
-// router.get('/premium', authenticated, Order.purchase_premium);
+router.get('/premium', authenticated.authenticate, Order.purchase_premium);
  
-// router.post('/updatetranscationstatus' , authenticated, Order.updateTransactionStatus);
+router.post('/updatetrans', authenticated.authenticate, Order.updateTransactionStatus);
 
-
+ 
 module.exports = router

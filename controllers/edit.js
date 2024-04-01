@@ -1,48 +1,46 @@
  // controllers/edit.js
  const Expense = require('../models/expense'); // UserModel defined in models/user.js
  const User = require('../models/user')
- const sequelize = require('../utils/database');
+ 
 
-  
- exports.deleteExpense = async (req, res, next) => {
+ const deleteExpense = async (req, res) => {
+  console.log(req.params)
   const expenseId = req.params.expenseId;
-
-  // Start a transaction
-  const t = await sequelize.transaction();
-
+  
   try {
-    // Find the expense by ID
-    const expense = await Expense.findByPk(expenseId);
+      // Find the expense by ID
+      const expense = await Expense.findById(expenseId);
+      const deleteExpense = await Expense.findByIdAndDelete(expenseId);
 
+      // If the expense does not exist, return a 404 error
+      if (!expense) {
+        return res.status(404).json({ error: 'Expense not found' });
+      }
+  
+      // Extract user ID from the expense
+      const userId = expense.userId;
+     // Find the user by ID
+     const user = await User.findById(userId);
+     
     // If the expense does not exist, return a 404 error
-    if (!expense) {
-      throw new Error('Expense not found');
+    if (!deleteExpense) {
+      return res.status(404).json({ error: 'Expense not found' });
     }
 
-    // Find the user associated with the expense
-    const user = await User.findByPk(expense.userId);
+ 
 
     // If the user does not exist, return a 404 error
     if (!user) {
-      throw new Error('User not found');
+      return res.status(404).json({ error: 'User not found' });
     }
 
     // Update the user's total balance
-    const updatedTotal = parseInt(user.total) - parseInt(expense.Amount);
-    await user.update({ total: updatedTotal }, { transaction: t });
-
-    // Delete the expense
-    await expense.destroy();
-
-    // Commit the transaction
-    await t.commit();
+    user.total -= expense.amount;
+    await user.save();
 
     // Return a 200 OK response
     res.status(200).json({ message: 'Expense deleted successfully' });
   } catch (err) {
-    // Roll back the transaction if there is an error
-    await t.rollback();
-
     // Log the error
     console.error('Error deleting expense:', err);
 
@@ -51,53 +49,48 @@
   }
 };
 
-exports.editExpense = async (req, res, next) => {
-  const expenseId = req.body.expenseId;
-  const updatedAmount = req.body.Amount;
-  const updatedIncome = req.body.Income;
-  const updatedDes = req.body.des;
-  const updatedCategory = req.body.category;
 
-  // Start a transaction
-  const t = await sequelize.transaction();
+ 
+const editExpense = async (req, res) => {
+  const expenseId = req.body.expenseId;
+  const updatedAmount = req.body.amount;
+  const updatedIncome = req.body.income;
+  const updatedDes = req.body.description;
+  const updatedCategory = req.body.category;
 
   try {
     // Find the expense by ID
-    const expense = await Expense.findByPk(expenseId);
+    const expense = await Expense.findById(expenseId);
 
     // If the expense does not exist, return a 404 error
     if (!expense) {
-      throw new Error('Expense not found');
+      return res.status(404).json({ error: 'Expense not found' });
     }
 
     // Find the user associated with the expense
-    const user = await User.findByPk(expense.userId);
+    const user = await User.findById(expense.userId);
 
     // If the user does not exist, return a 404 error
     if (!user) {
-      throw new Error('User not found');
+      return res.status(404).json({ error: 'User not found' });
     }
 
     // Update the user's total balance
-    const updatedTotal = parseInt(user.total) - parseInt(expense.Amount) + parseInt(updatedAmount);
-    await user.update({ total: updatedTotal }, { transaction: t });
+    const updatedTotal = parseInt(user.total) - parseInt(expense.amount) + parseInt(updatedAmount);
+    await User.findByIdAndUpdate(user._id, { total: updatedTotal });
 
     // Update the expense
-    expense.Amount = updatedAmount;
-    expense.Income = updatedIncome
-    expense.des = updatedDes;
-    expense.category = updatedCategory;
-    await expense.save();
+    await Expense.findByIdAndUpdate(expenseId, {
+      amount: updatedAmount,
+      income: updatedIncome,
+      description: updatedDes,
+      category: updatedCategory
+    });
 
-    // Commit the transaction
-    await t.commit();
-
+  
     // Return a 200 OK response with the updated expense
-    res.status(200).json(expense);
+    res.status(200).json({ message: 'Expense updated successfully' });
   } catch (err) {
-    // Roll back the transaction if there is an error
-    await t.rollback();
-
     // Log the error
     console.error('Error updating expense:', err);
 
@@ -106,8 +99,9 @@ exports.editExpense = async (req, res, next) => {
   }
 };
 
-
  
 
 
-
+module.exports = {
+deleteExpense, editExpense
+}

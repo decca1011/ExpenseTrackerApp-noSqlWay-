@@ -1,4 +1,4 @@
-// var baseUrl = 'http://44.198.130.123'; // Set your base URL here
+
 
 // Function to handle user sign-in
 async function signIn(event) {
@@ -17,7 +17,7 @@ async function signIn(event) {
        const token = response.data.token;
        console.log('Message:', responseMessage);
        console.log('Token:', token);
-       window.location.href = '../expense/expense.html';
+       window.location.href = '../expense/userExpense.html';
      } else {
        console.log(userData);
        console.log('Sign-in failed');

@@ -1,17 +1,31 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
-const router = require('./router/user');
-const expenseRoutes = require('./router/expense');
-const payRoutes = require('./router/purchase');
-const dashboard = require('./router/dashboard');
-const resetpassword = require('./router/resetpassword');
-const report = require('./router/report');
+app.get('/set-cookie', (req, res) => {
+  res.cookie('cookieName', 'cookieValue', {
+    sameSite: 'none',
+    secure: true,
+  });
+  res.send('Cookie set successfully!');
+});
+
+
+const mongoose = require('mongoose');
+ 
+ 
+const routes = require('./routes/user');
+const expenseRoutes = require('./routes/expense');
+const payRoutes = require('./routes/purchase');
+const dashboard = require('./routes/dashboard');
+const resetpassword = require('./routes/resetpassword');
+const report = require('./routes/report');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,22 +33,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
 //  routes for 'post', 'get', and 'delete' here
-app.use('/post', router);
+app.use('/post', routes);
 
 app.use('/called/password', resetpassword);
 app.use('/password', resetpassword);
+
 app.use('/post/expense', expenseRoutes); // API endpoint to insert a new user
 app.use('/get/expense', expenseRoutes); // API endpoint to get all users
 app.use('/user', expenseRoutes); // API endpoint to perform delete and edit task on user data
 app.use('/purchase', payRoutes);
+// app.post('/purchase/updatetransactionstatus', (req) => {
+//     console.log('hello')})
+
 app.use('/getYour', dashboard);
 app.use('/get', report);
 
+app.use((req, res, next) => {
+    res.setHeader('Set-Cookie', 'SameSite=None; Secure');
+    next();
+  });
 app.use((req, res) => {
     console.log('url', req.url);
-    res.sendFile(path.join(__dirname, 'Public', req.url));
+    res.sendFile(path.join(__dirname, 'public', req.url));
 });
 
+  
 mongoose
     .connect(
       'mongodb+srv://deepakpatil101197:A8a0CB13lgVKMYrY@cluster0.psuxcmr.mongodb.net/'
